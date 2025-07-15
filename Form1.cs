@@ -33,7 +33,9 @@ namespace SudokuPuzzleGame
 
                     tb.KeyPress += TextBox_KeyPress;
                     tableLayoutPanel1.Controls.Add(tb, col, row);
+                    Console.WriteLine($"Added TextBox at ({row}, {col}) with Tag: {tb.Tag}");
                 }
+                
             }
 
             LoadPuzzle();
