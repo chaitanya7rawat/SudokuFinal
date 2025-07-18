@@ -6,7 +6,7 @@ namespace SudokuPuzzleGame
 {
     public partial class Form1 : Form
     {
-        private int[,] initialPuzzle;
+        private int[,] initialPuzzle = new int[9, 9];
         private int difficultyLevel;
 
         public Form1(int difficulty)
@@ -166,6 +166,90 @@ namespace SudokuPuzzleGame
             }
         }
 
+        private void btnHint_Click(object sender, EventArgs e)
+        {
+            int[,] currentBoard = ReadBoard();
+            int[,] solvedBoard = new int[9, 9];
+
+            // Copy current board to solved board
+            Array.Copy(currentBoard, solvedBoard, currentBoard.Length);
+
+            // Solve the puzzle
+            if (SolveSudoku(solvedBoard))
+            {
+                // Find an empty cell and fill it with the correct value
+                Random rand = new Random();
+                var emptyCells = new System.Collections.Generic.List<Point>();
+
+                // Collect all empty cells
+                for (int i = 0; i < 9; i++)
+                {
+                    for (int j = 0; j < 9; j++)
+                    {
+                        if (currentBoard[i, j] == 0)
+                        {
+                            emptyCells.Add(new Point(i, j));
+                        }
+                    }
+                }
+
+                if (emptyCells.Count > 0)
+                {
+                    // Pick a random empty cell
+                    Point hintCell = emptyCells[rand.Next(emptyCells.Count)];
+
+                    // Fill it with the correct value
+                    SetCellValue(hintCell.X, hintCell.Y, solvedBoard[hintCell.X, hintCell.Y]);
+
+                    // Highlight the hint cell briefly
+                    HighlightCell(hintCell.X, hintCell.Y, Color.LightGreen);
+
+                    // Create a timer to remove the highlight after 2 seconds
+                    System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+                    timer.Interval = 2000; // 2 seconds
+                    timer.Tick += (s, args) =>
+                    {
+                        SetCellBackColor(hintCell.X, hintCell.Y, Color.White);
+                        timer.Stop();
+                        timer.Dispose();
+                    };
+                    timer.Start();
+                }
+                else
+                {
+                    MessageBox.Show("🎉 Puzzle is already complete!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("❌ Unable to provide hint - no solution found!");
+            }
+        }
+
+        private void SetCellValue(int row, int col, int value)
+        {
+            foreach (Control c in tableLayoutPanel1.Controls)
+            {
+                if (c is TextBox tb && ((Point)tb.Tag) == new Point(row, col))
+                {
+                    tb.Text = value.ToString();
+                    break;
+                }
+            }
+        }
+
+        private void SetCellBackColor(int row, int col, Color color)
+        {
+            foreach (Control c in tableLayoutPanel1.Controls)
+            {
+                if (c is TextBox tb && ((Point)tb.Tag) == new Point(row, col))
+                {
+                    tb.BackColor = color;
+                    break;
+                }
+            }
+        }
+
         private int[,] ReadBoard()
         {
             int[,] board = new int[9, 9];
@@ -229,7 +313,6 @@ namespace SudokuPuzzleGame
             return true;
         }
 
-
         private void HighlightCell(int row, int col, Color color)
         {
             foreach (Control c in tableLayoutPanel1.Controls)
@@ -256,6 +339,5 @@ namespace SudokuPuzzleGame
             launcher.Show();
             this.Close(); // close current game window
         }
-
     }
 }
