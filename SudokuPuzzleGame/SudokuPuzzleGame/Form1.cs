@@ -249,5 +249,13 @@ namespace SudokuPuzzleGame
                     tb.BackColor = Color.White;
             }
         }
+
+        private void btnRestart_Click(object sender, EventArgs e)
+        {
+            Form2 launcher = new Form2();
+            launcher.Show();
+            this.Close(); // close current game window
+        }
+
     }
 }

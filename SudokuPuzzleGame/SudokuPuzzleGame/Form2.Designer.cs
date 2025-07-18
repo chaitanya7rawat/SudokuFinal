@@ -47,9 +47,9 @@
             this.cmbDifficulty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbDifficulty.FormattingEnabled = true;
             this.cmbDifficulty.Items.AddRange(new object[] {
-            "Easy",
-            "Medium",
-            "Hard"});
+"Easy",
+"Medium",
+"Hard"});
             this.cmbDifficulty.Location = new System.Drawing.Point(30, 60);
             this.cmbDifficulty.Name = "cmbDifficulty";
             this.cmbDifficulty.Size = new System.Drawing.Size(200, 23);
